@@ -98,6 +98,10 @@ for (let i = 0; i < 6; i++) {
   const thickLine = new THREE.Mesh(tubeGeometry, thickLineMaterial)
 
   scene.add(thickLine)
+/** Add a group of line behind the cube**/
+
+  const lineGroupMaterial = new THREE.MeshBasicMaterial({color: 0xaaaaaa});
+  const lineSpacing = 0.5;
 
 // Initial camera position
 camera.position.z = 10;
