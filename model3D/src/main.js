@@ -1,56 +1,45 @@
 import * as THREE from 'three';
 import { CSS2DObject, CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
+
 /** Cube Patern **/
 // Creating a scene, camera and renderer
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement);
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
+// Create the cube geometry
+const geometry = new THREE.BoxGeometry(1, 1, 1);
 
-// Creating the cube
-const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-const cube = new THREE.Mesh( geometry, material );
-
-
-// Add a color to each Faces of The cube
-
+// Create the materials for each face
 const cubeFaceMaterials = [
-  new THREE.MeshBasicMaterial({ color: 0xff0000 }), // Red (Right)
-  new THREE.MeshBasicMaterial({ color: 0x00ff00 }), // Green (Left)
-  new THREE.MeshBasicMaterial({ color: 0x0000ff }), // Blue (Top)
-  new THREE.MeshBasicMaterial({ color: 0xffff00 }), // Yellow (Bottom)
-  new THREE.MeshBasicMaterial({ color: 0xff00ff }), // Magenta (Front)
-  new THREE.MeshBasicMaterial({ color: 0x00ffff }), // Cyan (Back)
+    new THREE.MeshBasicMaterial({ color: 0xff0000 }), // Right side
+    new THREE.MeshBasicMaterial({ color: 0x00ff00 }), // Left side
+    new THREE.MeshBasicMaterial({ color: 0x0000ff }), // Top side
+    new THREE.MeshBasicMaterial({ color: 0xffff00 }), // Bottom side
+    new THREE.MeshBasicMaterial({ color: 0xff00ff }), // Front side
+    new THREE.MeshBasicMaterial({ color: 0x00ffff })  // Back side
 ];
 
-const geometryFaces = new THREE.BoxGeometry(1,1,1)
-const cubeFaces = new THREE.Mesh(geometryFaces, cubeFaceMaterials)
-scene.add( cube );
-//scene.add( cubeFaces );
-camera.position.z = 5;
-renderer.setAnimationLoop( animate );
+// Create the single cube object with all materials
+const cube = new THREE.Mesh(geometry, cubeFaceMaterials);
+scene.add(cube); // Add only this single cube to the scene
 
 // Add Edges to the Cube
-
 const edges = new THREE.EdgesGeometry(geometry);
 const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
 const cubeEdges = new THREE.LineSegments(edges, lineMaterial);
-cube.add(cubeEdges);
+cube.add(cubeEdges); // Add edges to the correct cube
 
 /** Text Patern **/
-
-// Instantate the css2Drenderer
 const label2D = new CSS2DRenderer();
-label2D.setSize(window.innerWidth, window.innerHeight)
+label2D.setSize(window.innerWidth, window.innerHeight);
 label2D.domElement.style.position = 'absolute';
 label2D.domElement.style.top = '0px';
-document.body.appendChild(label2D.domElement)
+document.body.appendChild(label2D.domElement);
 
 // Create a Text label for each face of the cube
-
 const textContent = ["Right", "Left", "Top", "Bottom", "Front", "Back"];
 const facePositions = [
     new THREE.Vector3(0.5, 0, 0), // Right face
@@ -72,17 +61,22 @@ for (let i = 0; i < 6; i++) {
 
     const label = new CSS2DObject(div);
     label.position.copy(facePositions[i]);
-    cube.add(label);
+    cube.add(label); // Add labels to the correct cube
 }
 
+// Initial camera position
+camera.position.z = 5;
 
-// Loop Animate function
+// Loop Animation function
 function animate() {
-  // Cube Rotation
-  cube.rotation.x += .01;
-  cube.rotation.y += .01;
+    // Cube Rotation
+    cube.rotation.x += 0.05;
+    cube.rotation.y += 0.05;
 
-  // rendering !
-  renderer.render( scene, camera );
-  label2D.render(scene, camera)
+    // Rendering!
+    renderer.render(scene, camera);
+    label2D.render(scene, camera);
 }
+
+// Start the animation loop
+renderer.setAnimationLoop(animate);
