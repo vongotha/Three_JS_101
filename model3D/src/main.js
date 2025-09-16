@@ -19,7 +19,7 @@ camera.position.z = 5;
 
 function animate() {
   renderer.render( scene, camera );
-  cube.rotation.x += .09;
-  cube.rotation.y += .01;
+  cube.rotation.x += .02;
+/*   cube.rotation.y += .0; */
 }
 renderer.setAnimationLoop( animate );
