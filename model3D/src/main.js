@@ -66,26 +66,41 @@ for (let i = 0; i < 6; i++) {
 
 /**  Add line to the scene **/
 
-// Add a blue LineBasicMaterial
+  // Add a blue LineBasicMaterial Line
 
-const circleLineMaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } )
+  const circleLineMaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } )
 
-// Add some geometry with vertices
+  // Add some geometry with vertices
 
-const points = []
-points.push( new THREE.Vector3(-1, 0, 0) );
-points.push( new THREE.Vector3(0, 1, 0) );
-points.push( new THREE.Vector3(1, 0, 0) );
+  const points = []
+  points.push( new THREE.Vector3(-1, 0, 0) );
+  points.push( new THREE.Vector3(0, 1, 0) );
+  points.push( new THREE.Vector3(1, 0, 0) );
 
-const circleLinegeometry = new THREE.BufferGeometry().setFromPoints(points)
+  const circleLinegeometry = new THREE.BufferGeometry().setFromPoints(points)
 
-// creating a line
+  // creating a line
 
-const circleLine = new THREE.Line(circleLinegeometry, circleLineMaterial)
-scene.add(circleLine);
+  const circleLine = new THREE.Line(circleLinegeometry, circleLineMaterial)
+  //scene.add(circleLine);
+
+// /** Create a tubed semi Circle  */
+
+  const path = new THREE.CurvePath();
+
+  // Create an arc
+  const arc = new THREE.ArcCurve(0,0,2,Math.PI,0,false);
+  path.add(arc)
+
+  const tubeGeometry =new THREE.TubeGeometry(path, 64,0.05,8,false);
+  // Create a new Mesh for the thick Line
+  const thickLineMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  const thickLine = new THREE.Mesh(tubeGeometry, thickLineMaterial)
+
+  scene.add(thickLine)
 
 // Initial camera position
-camera.position.z = 2.5;
+camera.position.z = 10;
 
 // Loop Animation function
 function animate() {
