@@ -64,14 +64,34 @@ for (let i = 0; i < 6; i++) {
     cube.add(label); // Add labels to the correct cube
 }
 
+/**  Add line to the scene **/
+
+// Add a blue LineBasicMaterial
+
+const circleLineMaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } )
+
+// Add some geometry with vertices
+
+const points = []
+points.push( new THREE.Vector3(-1, 0, 0) );
+points.push( new THREE.Vector3(0, 1, 0) );
+points.push( new THREE.Vector3(1, 0, 0) );
+
+const circleLinegeometry = new THREE.BufferGeometry().setFromPoints(points)
+
+// creating a line
+
+const circleLine = new THREE.Line(circleLinegeometry, circleLineMaterial)
+scene.add(circleLine);
+
 // Initial camera position
-camera.position.z = 5;
+camera.position.z = 2.5;
 
 // Loop Animation function
 function animate() {
     // Cube Rotation
-    cube.rotation.x += 0.05;
-    cube.rotation.y += 0.05;
+    cube.rotation.x += 0.02;
+    cube.rotation.y += 0.02;
 
     // Rendering!
     renderer.render(scene, camera);
