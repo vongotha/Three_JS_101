@@ -9,46 +9,27 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // Load Textures
+const CubetextureLoader_one = new THREE.TextureLoader();
+const colorTexture = CubetextureLoader_one.load('src/assets/textures/metal_1_Texture/Metal054B_1K-JPG_Color.jpg');
+const normalTexture = CubetextureLoader_one.load('src/assets/textures/metal_1_Texture/Metal054B_1K-JPG_NormalDX.jpg');
+const roughnessTexture = CubetextureLoader_one.load('src/assets/textures/metal_1_Texture/Metal054B_1K-JPG_Roughness.jpg');
+const metalnessTexture = CubetextureLoader_one.load('src/assets/textures/metal_1_Texture/Metal054B_1K-JPG_Metalness.jpg');
 
-    // Texture 1: Metal_1
-
-    const CubetextureLoader_one = new THREE.TextureLoader();
-    const colorTexture = CubetextureLoader_one.load('src/assets/textures/metal_1_Texture/Metal054B_1K-JPG_Color.jpg');
-    const normalTexture = CubetextureLoader_one.load('src/assets/textures/metal_1_Texture/Metal054B_1K-JPG_NormalDX.jpg');
-    const roughnessTexture = CubetextureLoader_one.load('src/assets/textures/metal_1_Texture/Metal054B_1K-JPG_Roughness.jpg');
-    const metalnessTexture = CubetextureLoader_one.load('src/assets/textures/metal_1_Texture/Metal054B_1K-JPG_Metalness.jpg');
-
-    const cubeTextureMaterial_one = new THREE.MeshStandardMaterial({
-        map: colorTexture,
-        normalMap: normalTexture,
-        roughness: roughnessTexture,
-        metalnessMap: metalnessTexture
-    });
-
-    // Texture 1: Metal_2
-
-    const CubetextureLoader_two = new THREE.TextureLoader();
-    const aoTexture = CubetextureLoader_two.load('src/assets/textures/metal_2_Texture/textures/rusty_painted_metal_ao_1k.jpg');
-    const armTexture = CubetextureLoader_two.load('src/assets/textures/metal_2_Texture/textures/rusty_painted_metal_arm_1k.jpg');
-    const diffTexture = CubetextureLoader_two.load('src/assets/textures/metal_2_Texture/textures/rusty_painted_metal_diff_1k.jpg');
-
-    const CubeTextureMarerial_two = new THREE.MeshStandardMaterial({
-        map: aoTexture,
-        roughnessMap: armTexture,
-        metalnessMap: diffTexture,
-    });
-
+const cubeTextureMaterial_one = new THREE.MeshStandardMaterial({
+    map: colorTexture,
+    normalMap: normalTexture,
+    roughness: roughnessTexture,
+    metalnessMap: metalnessTexture
+});
 
 // Create the cube geometry and material with textures
 const geometry = new THREE.BoxGeometry(1, 1, 1);
-
-// Create the single cube object with the texture material
-const cube = new THREE.Mesh(geometry, cubeTextureMaterial_one); //
+const cube = new THREE.Mesh(geometry, cubeTextureMaterial_one);
 scene.add(cube);
 
 // Add Edges to the Cube
 const edges = new THREE.EdgesGeometry(geometry);
-const lineMaterial = new THREE.LineBasicMaterial({color: 0x0000f });
+const lineMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff }); // Corrected hex code
 const cubeEdges = new THREE.LineSegments(edges, lineMaterial);
 cube.add(cubeEdges);
 
@@ -57,7 +38,7 @@ const label2D = new CSS2DRenderer();
 label2D.setSize(window.innerWidth, window.innerHeight);
 label2D.domElement.style.position = 'absolute';
 label2D.domElement.style.top = '0px';
-//document.body.appendChild(label2D.domElement);
+document.body.appendChild(label2D.domElement);
 
 const textContent = ["Right", "Left", "Top", "Bottom", "Front", "Back"];
 const facePositions = [
@@ -81,17 +62,6 @@ for (let i = 0; i < 6; i++) {
     cube.add(label);
 }
 
-/** Add a thick semi-circle **/
-/* const path = new THREE.CurvePath();
-const arc = new THREE.ArcCurve(0, 0, 2, Math.PI, 0, false);
-path.add(arc);
-const tubeGeometry = new THREE.TubeGeometry(path, 64, 0.05, 8, false);
-const thickLineMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-const thickLine = new THREE.Mesh(tubeGeometry, thickLineMaterial);
-thickLine.position.z = -2;
-scene.add(thickLine); */
-
-
 /** Add background lines **/
 const lines = [];
 const lineGroupMaterial = new THREE.LineBasicMaterial({
@@ -107,25 +77,22 @@ const numLines = 5;
 const totalWidth = 6;
 const fadeDistance = 4;
 
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < numLines; i++) {
     const normalizedPosition = i / (numLines - 1);
-    const xOffset = totalWidth * (0.5 - Math.abs(normalizedPosition - 0.5)); // Corrected hourglass logic
-
+    const xOffset = totalWidth * (0.5 - Math.abs(normalizedPosition - 0.5));
     const points = [];
     points.push(new THREE.Vector3(-xOffset, -1.2 + i * lineSpacing, -20));
-    points.push(new THREE.Vector3(xOffset, -1.2 + i * lineSpacing, -20)); // Corrected to have a length
-
+    points.push(new THREE.Vector3(xOffset, -1.2 + i * lineSpacing, -20));
     const lineGroupGeometry = new THREE.BufferGeometry().setFromPoints(points);
     const lineGroup = new THREE.Line(lineGroupGeometry, lineGroupMaterial);
     scene.add(lineGroup);
     lines.push(lineGroup);
 }
 
-// Adding Lights to The scene (Correction)
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Lumière ambiante pour éclairer toute la scène
+// Adding Lights to The scene
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
-
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Lumière directionnelle pour créer des ombres
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.position.set(5, 5, 5).normalize();
 scene.add(directionalLight);
 
@@ -138,15 +105,12 @@ function animate() {
 
     for (const line of lines) {
         line.position.z += 0.2;
-
-        const distanceToCube = Math.abs(line.position.z - cube.position.z)
-
+        const distanceToCube = Math.abs(line.position.z - cube.position.z);
         if (distanceToCube < fadeDistance) {
             line.material.opacity = 1 - (distanceToCube / fadeDistance);
         } else {
             line.material.opacity = 1;
         }
-
         if (line.position.z > 5) {
             line.position.z = -20;
         }
