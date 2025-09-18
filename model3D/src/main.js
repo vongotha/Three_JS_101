@@ -48,7 +48,7 @@ scene.add(cube);
 
 // Add Edges to the Cube
 const edges = new THREE.EdgesGeometry(geometry);
-const lineMaterial = new THREE.LineBasicMaterial({ color: 0x0000f });
+const lineMaterial = new THREE.LineBasicMaterial({color: 0x0000f });
 const cubeEdges = new THREE.LineSegments(edges, lineMaterial);
 cube.add(cubeEdges);
 
@@ -91,16 +91,34 @@ const thickLine = new THREE.Mesh(tubeGeometry, thickLineMaterial);
 thickLine.position.z = -2;
 scene.add(thickLine); */
 
+
 /** Add background lines **/
-const lineGroupMaterial = new THREE.LineBasicMaterial({ color: 0xaaaaaa });
+const lines = [];
+const lineGroupMaterial = new THREE.LineBasicMaterial({
+    color: 0x00ff00,
+    emissive: 0x00ff00,
+    transparent: true,
+    opacity: 1,
+    blending: THREE.AdditiveBlending
+});
+
 const lineSpacing = 0.5;
+const numLines = 5;
+const totalWidth = 6;
+const fadeDistance = 4;
+
 for (let i = 0; i < 5; i++) {
+    const normalizedPosition = i / (numLines - 1);
+    const xOffset = totalWidth * (0.5 - Math.abs(normalizedPosition - 0.5)); // Corrected hourglass logic
+
     const points = [];
-    points.push(new THREE.Vector3(-6, -1.2 + i * lineSpacing, -3));
-    points.push(new THREE.Vector3(6, -1.2 + i * lineSpacing, -3));
+    points.push(new THREE.Vector3(-xOffset, -1.2 + i * lineSpacing, -20));
+    points.push(new THREE.Vector3(xOffset, -1.2 + i * lineSpacing, -20)); // Corrected to have a length
+
     const lineGroupGeometry = new THREE.BufferGeometry().setFromPoints(points);
     const lineGroup = new THREE.Line(lineGroupGeometry, lineGroupMaterial);
     scene.add(lineGroup);
+    lines.push(lineGroup);
 }
 
 // Adding Lights to The scene (Correction)
@@ -117,6 +135,23 @@ camera.position.z = 3;
 function animate() {
     cube.rotation.x += 0.01;
     cube.rotation.y += 0.01;
+
+    for (const line of lines) {
+        line.position.z += 0.2;
+
+        const distanceToCube = Math.abs(line.position.z - cube.position.z)
+
+        if (distanceToCube < fadeDistance) {
+            line.material.opacity = 1 - (distanceToCube / fadeDistance);
+        } else {
+            line.material.opacity = 1;
+        }
+
+        if (line.position.z > 5) {
+            line.position.z = -20;
+        }
+    }
+
     renderer.render(scene, camera);
     label2D.render(scene, camera);
 }
