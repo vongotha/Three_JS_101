@@ -47,10 +47,10 @@ const cube = new THREE.Mesh(geometry, cubeTextureMaterial_one); //
 scene.add(cube);
 
 // Add Edges to the Cube
-/* const edges = new THREE.EdgesGeometry(geometry);
-const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
+const edges = new THREE.EdgesGeometry(geometry);
+const lineMaterial = new THREE.LineBasicMaterial({ color: 0x0000f });
 const cubeEdges = new THREE.LineSegments(edges, lineMaterial);
-cube.add(cubeEdges); */
+cube.add(cubeEdges);
 
 /** Text Patern **/
 const label2D = new CSS2DRenderer();
