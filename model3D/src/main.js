@@ -8,31 +8,56 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Create the cube geometry and materials
+// Load Textures
+
+    // Texture 1: Metal_1
+
+    const CubetextureLoader_one = new THREE.TextureLoader();
+    const colorTexture = CubetextureLoader_one.load('src/assets/textures/metal_1_Texture/Metal054B_1K-JPG_Color.jpg');
+    const normalTexture = CubetextureLoader_one.load('src/assets/textures/metal_1_Texture/Metal054B_1K-JPG_NormalDX.jpg');
+    const roughnessTexture = CubetextureLoader_one.load('src/assets/textures/metal_1_Texture/Metal054B_1K-JPG_Roughness.jpg');
+    const metalnessTexture = CubetextureLoader_one.load('src/assets/textures/metal_1_Texture/Metal054B_1K-JPG_Metalness.jpg');
+
+    const cubeTextureMaterial_one = new THREE.MeshStandardMaterial({
+        map: colorTexture,
+        normalMap: normalTexture,
+        roughness: roughnessTexture,
+        metalnessMap: metalnessTexture
+    });
+
+    // Texture 1: Metal_2
+
+    const CubetextureLoader_two = new THREE.TextureLoader();
+    const aoTexture = CubetextureLoader_two.load('src/assets/textures/metal_2_Texture/textures/rusty_painted_metal_ao_1k.jpg');
+    const armTexture = CubetextureLoader_two.load('src/assets/textures/metal_2_Texture/textures/rusty_painted_metal_arm_1k.jpg');
+    const diffTexture = CubetextureLoader_two.load('src/assets/textures/metal_2_Texture/textures/rusty_painted_metal_diff_1k.jpg');
+
+    const CubeTextureMarerial_two = new THREE.MeshStandardMaterial({
+        map: aoTexture,
+        roughnessMap: armTexture,
+        metalnessMap: diffTexture,
+    });
+
+
+// Create the cube geometry and material with textures
 const geometry = new THREE.BoxGeometry(1, 1, 1);
-const cubeFaceMaterials = [
-    new THREE.MeshBasicMaterial({ color: 0xff0000 }), // Right side
-    new THREE.MeshBasicMaterial({ color: 0x00ff00 }), // Left side
-    new THREE.MeshBasicMaterial({ color: 0x0000ff }), // Top side
-    new THREE.MeshBasicMaterial({ color: 0xffff00 }), // Bottom side
-    new THREE.MeshBasicMaterial({ color: 0xff00ff }), // Front side
-    new THREE.MeshBasicMaterial({ color: 0x00ffff })  // Back side
-];
-const cube = new THREE.Mesh(geometry, cubeFaceMaterials);
+
+// Create the single cube object with the texture material
+const cube = new THREE.Mesh(geometry, cubeTextureMaterial_one); //
 scene.add(cube);
 
 // Add Edges to the Cube
-const edges = new THREE.EdgesGeometry(geometry);
+/* const edges = new THREE.EdgesGeometry(geometry);
 const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
 const cubeEdges = new THREE.LineSegments(edges, lineMaterial);
-cube.add(cubeEdges);
+cube.add(cubeEdges); */
 
 /** Text Patern **/
 const label2D = new CSS2DRenderer();
 label2D.setSize(window.innerWidth, window.innerHeight);
 label2D.domElement.style.position = 'absolute';
 label2D.domElement.style.top = '0px';
-document.body.appendChild(label2D.domElement);
+//document.body.appendChild(label2D.domElement);
 
 const textContent = ["Right", "Left", "Top", "Bottom", "Front", "Back"];
 const facePositions = [
@@ -57,33 +82,41 @@ for (let i = 0; i < 6; i++) {
 }
 
 /** Add a thick semi-circle **/
-const path = new THREE.CurvePath();
+/* const path = new THREE.CurvePath();
 const arc = new THREE.ArcCurve(0, 0, 2, Math.PI, 0, false);
 path.add(arc);
 const tubeGeometry = new THREE.TubeGeometry(path, 64, 0.05, 8, false);
 const thickLineMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
 const thickLine = new THREE.Mesh(tubeGeometry, thickLineMaterial);
-thickLine.position.z = -2; // Move the thick line forward
-scene.add(thickLine);
+thickLine.position.z = -2;
+scene.add(thickLine); */
 
 /** Add background lines **/
 const lineGroupMaterial = new THREE.LineBasicMaterial({ color: 0xaaaaaa });
 const lineSpacing = 0.5;
 for (let i = 0; i < 5; i++) {
     const points = [];
-    points.push(new THREE.Vector3(-6, -1.2 + i * lineSpacing, -3)); // Adjust Z to be behind the cube
-    points.push(new THREE.Vector3(6, -1.2 + i * lineSpacing, -3)); // Adjust Z to be behind the cube
+    points.push(new THREE.Vector3(-6, -1.2 + i * lineSpacing, -3));
+    points.push(new THREE.Vector3(6, -1.2 + i * lineSpacing, -3));
     const lineGroupGeometry = new THREE.BufferGeometry().setFromPoints(points);
     const lineGroup = new THREE.Line(lineGroupGeometry, lineGroupMaterial);
     scene.add(lineGroup);
 }
 
+// Adding Lights to The scene (Correction)
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Lumière ambiante pour éclairer toute la scène
+scene.add(ambientLight);
+
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Lumière directionnelle pour créer des ombres
+directionalLight.position.set(5, 5, 5).normalize();
+scene.add(directionalLight);
+
 // Initial camera position
-camera.position.z = 5;
+camera.position.z = 3;
 
 function animate() {
-    cube.rotation.x += 0.02;
-    cube.rotation.y += 0.02;
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
     renderer.render(scene, camera);
     label2D.render(scene, camera);
 }
