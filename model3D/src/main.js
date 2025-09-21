@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { CSS2DObject, CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
+import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import { Const } from 'three/tsl';
 
 
@@ -115,8 +116,13 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.position.set(5, 5, 5).normalize();
 scene.add(directionalLight);
 
-// Initial camera position
+// Add An Orbit Control for our Scene
+
+const controls = new OrbitControls(camera, renderer.domElement);
+
+// Initial camera position & Update the controls
 camera.position.z = 3;
+controls.update();
 
 function animate() {
 
