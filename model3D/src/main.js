@@ -129,7 +129,6 @@ function animate() {
         label2D.setSize(canvas.clientWidth, canvas.clientHeight); 
     }
 
-
     cube.rotation.x += 0.01;
     cube.rotation.y += 0.01;
 
@@ -159,10 +158,16 @@ function onWindowREsize () {
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     label2D.setSize(window.innerWidth, window.innerHeight);
-<<<<<<< HEAD
 }
 
-window.addEventListener('resize', onWindowREsize, false);
-=======
+// Add the debounce function before your event listener
+function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    };
 }
->>>>>>> c03342ded695c0628d765af35fad65a5295f7e05
+
+window.addEventListener('resize', debounce(onWindowREsize, 250), false);
