@@ -123,3 +123,12 @@ function animate() {
 }
 
 renderer.setAnimationLoop(animate);
+
+function onWindowREsize () {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    label2D.setSize(window.innerWidth, window.innerHeight);
+}
