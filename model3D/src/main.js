@@ -58,6 +58,7 @@ const label2D = new CSS2DRenderer();
 label2D.setSize(window.innerWidth, window.innerHeight);
 label2D.domElement.style.position = 'absolute';
 label2D.domElement.style.top = '0px';
+label2D.domElement.style.pointerEvents = 'none'; //Unable OrbitControls behaviour
 document.body.appendChild(label2D.domElement);
 
 const textContent = ["Right", "Left", "Top", "Bottom", "Front", "Back"];
@@ -82,33 +83,6 @@ for (let i = 0; i < 6; i++) {
     cube.add(label);
 }
 
-/** Add background lines **/
-const lines = [];
-const lineGroupMaterial = new THREE.LineBasicMaterial({
-    color: 0x00ff00,
-    emissive: 0x00ff00,
-    transparent: true,
-    opacity: 1,
-    blending: THREE.AdditiveBlending
-});
-
-const lineSpacing = 0.5;
-const numLines = 5;
-const totalWidth = 6;
-const fadeDistance = 4;
-
-for (let i = 0; i < numLines; i++) {
-    const normalizedPosition = i / (numLines - 1);
-    const xOffset = totalWidth * (0.5 - Math.abs(normalizedPosition - 0.5));
-    const points = [];
-    points.push(new THREE.Vector3(-xOffset, -1.2 + i * lineSpacing, -20));
-    points.push(new THREE.Vector3(xOffset, -1.2 + i * lineSpacing, -20));
-    const lineGroupGeometry = new THREE.BufferGeometry().setFromPoints(points);
-    const lineGroup = new THREE.Line(lineGroupGeometry, lineGroupMaterial);
-    scene.add(lineGroup);
-    lines.push(lineGroup);
-}
-
 // Adding Lights to The scene
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
@@ -122,7 +96,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 
 // Initial camera position & Update the controls
 camera.position.z = 3;
-controls.update();
+
 
 function animate() {
 
@@ -136,21 +110,9 @@ function animate() {
     }
 
     cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
+    //cube.rotation.y += 0.01;
 
-    for (const line of lines) {
-        line.position.z += 0.2;
-        const distanceToCube = Math.abs(line.position.z - cube.position.z);
-        if (distanceToCube < fadeDistance) {
-            line.material.opacity = 1 - (distanceToCube / fadeDistance);
-        } else {
-            line.material.opacity = 1;
-        }
-        if (line.position.z > 5) {
-            line.position.z = -20;
-        }
-    }
-
+    controls.update();
     renderer.render(scene, camera);
     label2D.render(scene, camera);
 }
