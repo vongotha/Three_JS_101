@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { CSS2DObject, CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
+import { Const } from 'three/tsl';
 
 
 const canvas = document.querySelector('#c');
@@ -7,8 +8,24 @@ const canvas = document.querySelector('#c');
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ canvas: canvas});
+renderer.setPixelRatio(window.devicePixelRatio); // Match Renderer Size to Canvas Display Size
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+
+/* resizeRendererToDisplaySize */
+
+function resizeRendererToDisplaySize (renderer) {
+    const canvas = renderer.domElement;
+    const pixelRatio = window.devicePixelRatio;
+    const width = Math.floor(canvas.clientWidth * pixelRatio);
+    const height = Math.floor(canvas.clientHeight * pixelRatio);
+    const needResize = canvas.width !== width || canvas.height !== height;
+    if (needResize) {
+        renderer.setSize(width, height, false);
+    }
+    return needResize;
+}
+
 
 // Load Textures
 const CubetextureLoader_one = new THREE.TextureLoader();
@@ -102,6 +119,17 @@ scene.add(directionalLight);
 camera.position.z = 3;
 
 function animate() {
+
+    if (resizeRendererToDisplaySize(renderer)) {
+        const canvas = renderer.domElement;
+        camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        camera.updateProjectionMatrix();
+        
+        // Also update the CSS2DRenderer size
+        label2D.setSize(canvas.clientWidth, canvas.clientHeight); 
+    }
+
+
     cube.rotation.x += 0.01;
     cube.rotation.y += 0.01;
 
