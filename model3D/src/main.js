@@ -159,6 +159,10 @@ function onWindowREsize () {
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     label2D.setSize(window.innerWidth, window.innerHeight);
+<<<<<<< HEAD
 }
 
 window.addEventListener('resize', onWindowREsize, false);
+=======
+}
+>>>>>>> c03342ded695c0628d765af35fad65a5295f7e05
