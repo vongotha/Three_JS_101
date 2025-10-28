@@ -1,0 +1,31 @@
+body {
+    margin: 0;
+}
+
+.backgroundContainer {
+    width: 100vh;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Ajoutez la position relative pour que les enfants se positionnent par rapport à lui */
+    position: relative; 
+}
+
+/* Ciblez le canevas Three.js pour le positionner en arrière-plan */
+.backgroundContainer canvas {
+    position: absolute; /* Positionne le canevas en absolu */
+    top: 0;
+    left: 0;
+    z-index: 1; /* Place le canevas au premier plan du conteneur (bas) */
+}
+
+/* Ciblez le lien pour le positionner au-dessus du canevas */
+.backgroundContainer a {
+    position: relative; /* Doit avoir une position pour que le z-index fonctionne */
+    z-index: 10; /* Place le lien au-dessus du canevas (haut) */
+    /* Assurez-vous que le lien a un fond et est visible si nécessaire */
+    background: transparent;
+    color:beige;
+}
+
