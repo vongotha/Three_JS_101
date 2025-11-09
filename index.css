@@ -1,5 +1,7 @@
 body {
     margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden; /* Empêche les barres de défilement dues aux blobs en mouvement */
 }
 
 .backgroundContainer {
@@ -11,19 +13,79 @@ body {
     position: relative; 
 }
 
-.backgroundContainer canvas {
-    position: absolute; /* Positionne le canevas en absolu */
+/* ------------------ Styles du SVG Blob ------------------ */
+
+.animated-blobs {
+    position: absolute;
     top: 0;
     left: 0;
-    z-index: 1; /* Place le canevas au premier plan du conteneur (bas) */
+    width: 100%;
+    height: 100%;
+    /* *** L'effet "Gooey" ***
+    Un flou important (80px) suivi d'un contraste élevé (15) 
+    force les zones floues qui se chevauchent à devenir opaques, 
+    créant l'effet de fusion des couleurs.
+    */
+    filter: blur(80px) contrast(15); 
+    z-index: 0; /* Place le SVG en arrière-plan */
+    transform: scale(1.1); /* Laisse une petite marge pour le mouvement et le flou */
 }
 
-/* Ciblez le lien pour le positionner au-dessus du canevas */
+/* ------------------ Animation des Blobs ------------------ */
+
+#blob1 {
+    animation: moveBlob1 20s infinite alternate ease-in-out;
+    transform-origin: 50% 50%; /* Point d'origine pour les transformations */
+}
+
+#blob2 {
+    animation: moveBlob2 25s infinite alternate-reverse ease-in-out;
+    transform-origin: 50% 50%;
+}
+
+#blob3 {
+    animation: moveBlob3 15s infinite alternate ease-in-out;
+    transform-origin: 50% 50%;
+}
+
+/* Keyframes pour les différents mouvements */
+@keyframes moveBlob1 {
+    0% { transform: translate(0px, 0px) scale(1); }
+    50% { transform: translate(150px, -80px) scale(1.1); }
+    100% { transform: translate(-50px, 120px) scale(0.95); }
+}
+
+@keyframes moveBlob2 {
+    0% { transform: translate(0px, 0px) rotate(0deg); }
+    40% { transform: translate(-100px, 50px) rotate(30deg); }
+    100% { transform: translate(50px, -150px) rotate(-10deg); }
+}
+
+@keyframes moveBlob3 {
+    0% { transform: translate(0, 0); }
+    33% { transform: translate(200px, 100px) scale(1.2); }
+    66% { transform: translate(50px, -50px); }
+    100% { transform: translate(0, 0) scale(1.1); }
+} 
+
+/* ------------------ Autres Styles ------------------ */
+
+.backgroundContainer canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1; /* Place le canevas juste au-dessus du SVG */
+}
+
+/* Ciblez le lien pour le positionner au-dessus de tout */
 .backgroundContainer a {
-    position: relative; /* Doit avoir une position pour que le z-index fonctionne */
-    z-index: 10; /* Place le lien au-dessus du canevas (haut) */
-    /* Assurez-vous que le lien a un fond et est visible si nécessaire */
-    background: transparent;
-    color:beige;
+    position: relative;
+    z-index: 10; /* Place le lien au-dessus du canevas et du SVG */
+    color: black;
+    font-size: 5rem;
+    text-decoration: none;
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8); /* Pour le rendre visible sur les couleurs */
 }
 
+/* Supprimer la classe .gradientLayer originale */
+/* .gradientLayer a été remplacé par .animated-blobs */
